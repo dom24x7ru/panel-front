@@ -1,0 +1,22 @@
+/* FormDemo.css */
+
+.formDemo .card {
+    min-width: 450px;
+}
+.formDemo .card form {
+    margin-top: 2rem;
+}
+.formDemo .card .field {
+    margin-bottom: 1.5rem;
+}
+@media screen and (max-width: 960px) {
+    .formDemo .card {
+        width: 80%;
+    }
+}
+@media screen and (max-width: 640px) {
+    .formDemo .card {
+        width: 100%;
+        min-width: 0;
+    }
+}
