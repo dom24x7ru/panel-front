@@ -1,8 +1,9 @@
 import type { NextPage } from 'next';
+import MainForm from '../components/MainForm/MainForm';
 
 const Home: NextPage = () => (
   <div>
-    <h1>Home</h1>
+    <MainForm />
   </div>
 );
 

@@ -8286,3 +8286,37 @@
 }
 
 /* Customizations to the designer theme should be defined here */
+.p-menuitem-text {
+  color: #ffffff !important;
+}
+.p-breadcrumb {
+  background-color: #25476a !important;
+  border: 1px solid #25476a !important;
+}
+
+.p-breadcrumb-chevron {
+  color: #ffffff !important;
+}
+.p-accordion .p-accordion-header .p-accordion-header-link {
+    background: #25476a !important;
+    border-color: #25476a !important;
+    color: #ffffff !important;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.p-menu .p-menuitem-link {
+  color: #ffffff !important;
+  background: #25476a !important;
+  border-color: #25476a !important;
+}
+.p-menu.p-menu-overlay {
+  background: #25476a !important;
+  
+}
+
+.accordionUserEdit {
+  color: black !important;
+  background: #ffffff !important;
+  border-color: #25476a !important;
+}

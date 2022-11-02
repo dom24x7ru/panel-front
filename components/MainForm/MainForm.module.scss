@@ -1,0 +1,52 @@
+
+.content {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    border-bottom: 1px solid #6c757d;
+    background-color: #25476a;
+
+    h3 {
+        width: 20%;
+        color: white;
+    }
+    
+    .end {
+        display: flex;
+        width: 80%;
+        margin-right: 44px;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.breadCrumbs {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.avatar {
+    text-align: center;
+    p {
+        text-align: center;
+    }
+
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link {
+    color: red;
+}
+
+.accordionUserEdit {
+    color: black !important;
+    background: #25476a !important;
+    border-color: #25476a !important;
+
+    span {
+        text-align: center;
+    }
+  }
+  

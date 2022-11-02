@@ -133,7 +133,6 @@ const LoginForm = () => {
               email: "",
               password: "",
               date: null,
-              country: null,
               accept: false,
             }}
             validate={validate}
@@ -142,7 +141,7 @@ const LoginForm = () => {
                 <Field
                   name="name"
                   render={({ input, meta }) => (
-                    <div className="field">
+                    <div className={style.field}>
                       <span className="p-float-label">
                         <InputText
                           id="name"
@@ -168,7 +167,7 @@ const LoginForm = () => {
                 <Field
                   name="email"
                   render={({ input, meta }) => (
-                    <div className="field">
+                    <div className={style.field}>
                       <span className="p-float-label p-input-icon-right">
                         <i className="pi pi-envelope" />
                         <InputText
@@ -194,7 +193,7 @@ const LoginForm = () => {
                 <Field
                   name="password"
                   render={({ input, meta }) => (
-                    <div className="field">
+                    <div className={style.field}>
                       <span className="p-float-label">
                         <Password
                           id="password"
@@ -222,7 +221,7 @@ const LoginForm = () => {
                 <Field
                   name="date"
                   render={({ input }) => (
-                    <div className="field">
+                    <div className={style.field}>
                       <span className="p-float-label">
                         <Calendar
                           id="date"
