@@ -1,27 +1,49 @@
-import React, { useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "primereact/button";
-import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import SocketClient from "../../api/SocketClient";
 import Header from "../Header/Header";
 import LeftBar from "../LeftBar/LeftBar";
 import style from "./MainForm.module.scss";
+import Ymap from "./Ymap/Ymap";
 
 const MainForm = () => {
   const [visibleLeft, setVisibleLeft] = useState(false);
+  const [points, setPoints] = useState<any>([]);
   const overlayNotification = useRef<OverlayPanel>(null);
   const overlayUser = useRef<OverlayPanel>(null);
-
 
   const itemsCrumbs = [
     { label: "Computer" },
     { label: "Notebook" },
     { label: "Accessories" },
-    { label: "Backpacks" },
-    { label: "Item" },
   ];
+
+  useEffect(() => {
+    let client = new SocketClient({
+      port: 443,
+      hostname: "node.dom24x7.ru",
+      secure: true,
+    });
+    let params = {};
+    client
+      .wrapEmit("panel/house.list", params)
+      .then((data) => {
+        setPoints(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const headerCostom = (options: any) => {
     return (
@@ -86,24 +108,22 @@ const MainForm = () => {
               size="xlarge"
               shape="circle"
             />
-            <Accordion activeIndex={1} >
+            <Accordion activeIndex={1}>
               <AccordionTab
                 tabIndex={1}
                 className="accordionUserEdit"
                 header={
                   <React.Fragment>
                     <i className="pi pi-user-edit"></i>
-                    <span>Тимур Евгажуков</span>
+                    <span>Тимур Евгажуков (Администратор)</span>
                   </React.Fragment>
                 }
               >
-                <p>
-                  Профиль
-                </p>
+                <p>Профиль</p>
               </AccordionTab>
             </Accordion>
           </div>
-          <Accordion activeIndex={0}>
+          <Accordion style={{ marginTop: "38px" }} activeIndex={0}>
             <AccordionTab
               tabIndex={1}
               header={
@@ -113,9 +133,7 @@ const MainForm = () => {
                 </React.Fragment>
               }
             >
-              <p>
-                Дома
-              </p>
+              <p>Дома</p>
             </AccordionTab>
             <AccordionTab
               tabIndex={2}
@@ -126,9 +144,7 @@ const MainForm = () => {
                 </React.Fragment>
               }
             >
-              <p>
-                Настройки
-              </p>
+              <p>Настройки</p>
             </AccordionTab>
             <AccordionTab
               tabIndex={3}
@@ -148,18 +164,7 @@ const MainForm = () => {
       </div>
       <div className={style.div2}>
         <Header header={"DOM 24x7"} headerTemplate={headerCostom}>
-          <p>
-            Lorem Ipsum - это текст-рыба, часто используемый в печати и
-            вэб-дизайне. Lorem Ipsum является стандартной рыбой для текстов на
-            латинице с начала XVI века. В то время некий безымянный печатник
-            создал большую коллекцию размеров и форм шрифтов, используя Lorem
-            Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил
-            без заметных изменений пять веков, но и перешагнул в электронный
-            дизайн. Его популяризации в новое время послужили публикация листов
-            Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее
-            время, программы электронной вёрстки типа Aldus PageMaker, в
-            шаблонах которых используется Lorem Ipsum.
-          </p>
+          <Ymap points={points} />
         </Header>
       </div>
     </div>
