@@ -125,12 +125,11 @@ const LoginForm = () => {
 
       <div className="flex justify-content-center">
         <div className={style.card}>
-          <h5 className="text-center">Register</h5>
+          <h3 className="text-center">Авторизация пользователя</h3>
           <Form
             onSubmit={onSubmit}
             initialValues={{
               name: "",
-              email: "",
               password: "",
               date: null,
               accept: false,
@@ -158,32 +157,6 @@ const LoginForm = () => {
                           })}
                         >
                           Name*
-                        </label>
-                      </span>
-                      {getFormErrorMessage(meta)}
-                    </div>
-                  )}
-                />
-                <Field
-                  name="email"
-                  render={({ input, meta }) => (
-                    <div className={style.field}>
-                      <span className="p-float-label p-input-icon-right">
-                        <i className="pi pi-envelope" />
-                        <InputText
-                          id="email"
-                          {...input}
-                          className={classNames({
-                            "p-invalid": isFormFieldValid(meta),
-                          })}
-                        />
-                        <label
-                          htmlFor="email"
-                          className={classNames({
-                            "p-error": isFormFieldValid(meta),
-                          })}
-                        >
-                          Email*
                         </label>
                       </span>
                       {getFormErrorMessage(meta)}
@@ -219,23 +192,6 @@ const LoginForm = () => {
                   )}
                 />
                 <Field
-                  name="date"
-                  render={({ input }) => (
-                    <div className={style.field}>
-                      <span className="p-float-label">
-                        <Calendar
-                          id="date"
-                          {...input}
-                          dateFormat="dd/mm/yy"
-                          mask="99/99/9999"
-                          showIcon
-                        />
-                        <label htmlFor="date">Birthday</label>
-                      </span>
-                    </div>
-                  )}
-                />
-                <Field
                   name="accept"
                   type="checkbox"
                   render={({ input, meta }) => (
@@ -253,7 +209,7 @@ const LoginForm = () => {
                           "p-error": isFormFieldValid(meta),
                         })}
                       >
-                        I agree to the terms and conditions*
+                        Подтверждаю согласия с правилами*
                       </label>
                     </div>
                   )}

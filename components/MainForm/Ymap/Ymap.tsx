@@ -2,35 +2,30 @@ import React, { useEffect } from "react";
 import { YMaps, Map, ObjectManager } from "@pbe/react-yandex-maps";
 
 const Ymap = ({ points }: { points: any }) => {
-  const [yandexItem, setYandexItems] = React.useState<any>(points);
+  const [yandexItem, setYandexItems] = React.useState<any>([]);
+  const [state, setState] = React.useState(points);
 
   useEffect(() => {
-    setYandexItems(points);
-  }, [points]);
-
-  const collection = {
-    type: "FeatureCollection",
-    features: yandexItem.houses?.map((item: any, id: any) => {
-      if (yandexItem != undefined) {
-      return {
-        id: id,
-        type: "Feature",
+    setState(points)
+    let pointsArr: { id: any; geometry: { type: string; coordinates: any[]; }; properties: { balloonContent: string; clusterCaption: string; }; }[] = [];
+    (state.houses ?? []).map((item: any) => {
+      pointsArr.push({
+        id: item.id,
         geometry: {
           type: "Point",
           coordinates: [item.lat, item.lon],
         },
         properties: {
           balloonContent: `
-          <div>${item.address}</div>
-          Ко-во зарегестрированных: ${item.residents}
-        `,
-          clusterCaption: `Метка №${id + 1}`,
+                  <div>${item.address}</div>
+                  Ко-во зарегестрированных: ${item.residents}
+                `,
+          clusterCaption: `Метка №${item.id + 1}`,
         },
-      };
-    }
-    })
-  };
-  //console.log(collection);
+      });
+    });
+    setYandexItems(pointsArr)
+  }, [points, points.houses, state.houses]);
 
   return (
     <>
@@ -38,7 +33,7 @@ const Ymap = ({ points }: { points: any }) => {
         <Map
           width="100%"
           height="500px"
-          defaultState={{
+          state={{
             center: [55.751574, 37.573856],
             zoom: 10,
           }}
@@ -52,7 +47,7 @@ const Ymap = ({ points }: { points: any }) => {
               clusterize: true,
               gridSize: 32,
             }}
-            defaultFeatures={collection}
+            features={{ type: "FeatureCollection", features: yandexItem }}
             modules={[
               "objectManager.addon.objectsBalloon",
               "objectManager.addon.clustersBalloon",

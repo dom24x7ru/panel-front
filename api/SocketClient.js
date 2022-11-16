@@ -10,7 +10,7 @@ export default class SocketClient extends EventEmitter {
     this.user = null;
     this.data = {};
     this.ready = false;
-    this.socket = socketClusterClient.create(options);
+    this.socket = socketClusterClient.connect(options);
 
     this.socket.on("connect", status => {
       console.log("isAuthenticated", status.isAuthenticated);
@@ -24,7 +24,7 @@ export default class SocketClient extends EventEmitter {
   async handleConnect() {
     this.ready = false;
     this.emit("loading");
-    // for (let name of this.commonChannels()) this.initChannel(name);
+    //for (let name of this.commonChannels()) this.initChannel(name);
     if (!this.user) await this.handleLogin();
   }
 

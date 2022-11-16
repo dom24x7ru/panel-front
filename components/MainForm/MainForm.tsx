@@ -1,7 +1,5 @@
 import React, {
-  useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -17,6 +15,7 @@ import style from "./MainForm.module.scss";
 import Ymap from "./Ymap/Ymap";
 
 const MainForm = () => {
+  
   const [visibleLeft, setVisibleLeft] = useState(false);
   const [points, setPoints] = useState<any>([]);
   const overlayNotification = useRef<OverlayPanel>(null);
@@ -27,6 +26,7 @@ const MainForm = () => {
     { label: "Notebook" },
     { label: "Accessories" },
   ];
+
 
   useEffect(() => {
     let client = new SocketClient({
@@ -44,6 +44,8 @@ const MainForm = () => {
         console.log(error);
       });
   }, []);
+
+  console.log(points)
 
   const headerCostom = (options: any) => {
     return (
