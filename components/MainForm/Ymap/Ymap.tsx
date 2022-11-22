@@ -18,7 +18,7 @@ const Ymap = ({ points }: { points: any }) => {
         properties: {
           balloonContent: `
                   <div>${item.address}</div>
-                  Ко-во зарегестрированных: ${item.residents}
+                  Ко-во зарегистрированных: ${item.residents}
                 `,
           clusterCaption: `Метка №${item.id + 1}`,
         },

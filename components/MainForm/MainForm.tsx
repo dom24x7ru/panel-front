@@ -8,7 +8,8 @@ import { Avatar } from "primereact/avatar";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Accordion, AccordionTab } from "primereact/accordion";
-import SocketClient from "../../api/SocketClient";
+import Image from 'next/image';
+import client from "../../storage";
 import Header from "../Header/Header";
 import LeftBar from "../LeftBar/LeftBar";
 import style from "./MainForm.module.scss";
@@ -22,18 +23,13 @@ const MainForm = () => {
   const overlayUser = useRef<OverlayPanel>(null);
 
   const itemsCrumbs = [
-    { label: "Computer" },
-    { label: "Notebook" },
-    { label: "Accessories" },
-  ];
+        {label: 'Главная', url: '/home/main'},
+        {label: 'Пользователи'},
+        {label: 'Дома'},
+    ];
 
 
   useEffect(() => {
-    let client = new SocketClient({
-      port: 443,
-      hostname: "node.dom24x7.ru",
-      secure: true,
-    });
     let params = {};
     client
       .wrapEmit("panel/house.list", params)
@@ -44,8 +40,6 @@ const MainForm = () => {
         console.log(error);
       });
   }, []);
-
-  console.log(points)
 
   const headerCostom = (options: any) => {
     return (
@@ -58,6 +52,7 @@ const MainForm = () => {
             style={{ color: "white", marginTop: "0.4em" }}
           />
         </div>
+        <Image className={style.logo} src="/buildingLogo.svg" alt="Logo" width={60} height={60} />
         <h3>DOM 24x7</h3>
         <div className={style.end}>
           <div className={style.breadCrumbs}>

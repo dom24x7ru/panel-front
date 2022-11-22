@@ -1,13 +1,10 @@
-/* FormDemo.css */
-
 .formDemo .card {
+    margin-top: 8rem;
     min-width: 400px;
-}
-.formDemo .card form {
-    margin-top: 2rem;
+
 }
 .formDemo .card .field {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.9rem;
 }
 @media screen and (max-width: 960px) {
     .formDemo .card {
@@ -18,5 +15,18 @@
     .formDemo .card {
         width: 100%;
         min-width: 0;
+    }
+}
+
+.card {
+    h2 {
+        color: #1B3954;
+        font-size: 28px;
+    }
+    h4 {
+        color: #1B3954;
+    }
+    .logo {
+        width: 100%;
     }
 }
