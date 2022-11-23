@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import router from 'next/router';
+import React, { useState, useRef } from "react";
+import router from "next/router";
 import client from "../../storage";
-import { Form, Field } from "react-final-form";
 import { InputMask } from "primereact/inputmask";
+import { Toast } from 'primereact/toast';
 import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import Image from "next/image";
@@ -11,51 +11,55 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
+import { Controller, useForm } from "react-hook-form";
 
 const LoginForm = () => {
   const [showMessage, setShowMessage] = useState(false);
+  const toast = useRef<Toast>(null);
   const [formData, setFormData] = useState({});
+  const [status, setStatus] = useState({});
+  const defaultValues = {
+    mobile: '',
+    code: "",
+  };
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ defaultValues });
 
-  const validate = (data: { mobile: string; code: string }) => {
-    let errors = {};
-
-    if (!data.mobile) {
-      errors.mobile = "Номер телефона обязателен для заполнения";
-    }
-    // if (!data.code) {
-    //   errors.code = "Введите код из смс.";
-    // }
-
-    return errors;
+  const getFormErrorMessage = (name: any) => {
+    return (
+      errors[name as keyof typeof errors] && <small className="p-error">{errors[name].message}</small>
+    );
   };
 
-  const onSubmit = (data: React.SetStateAction<{}>) => {
-    setFormData(data);
+  const showError = (summary: string, detail: any) => {
+    if (toast != null && toast.current != null) {
+      toast.current.show({ severity: 'error', summary: summary, detail: detail, life: 10000 });
+    }
+  };
+
+  const onSubmit = async (data: any) => {
+    let params = {
+      mobile: `7${data.mobile}`,
+      code: data.code
+    }
     setShowMessage(true);
     client
-      .wrapEmit("user.auth", formData)
+      .wrapEmit("user.auth", params)
       .then((data) => {
-        console.log(data);
-        data.id ? router.push('/home/main') : null;
+        setStatus(data);
+        data.id ? router.push(`/home/main?id=${data.id}`) : showError('Ошибка', data.message);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: any) => {
+        console.log(err)
       });
-  };
-
-  console.log(formData);
-
-  const isFormFieldValid = (meta: any) => !!(meta.touched && meta.error);
-  const getFormErrorMessage = (meta: {
-    error: string | number | boolean | null | undefined;
-  }) => {
-    return (
-      isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>
-    );
   };
 
   return (
     <div className={style.formDemo}>
+      <Toast ref={toast}></Toast>
       <div className="flex justify-content-center">
         <div className={style.card}>
           <Image
@@ -67,79 +71,70 @@ const LoginForm = () => {
           />
           <h2 className="text-center">DOM 24x7 Панель администратора</h2>
           <h4 className="text-center">Авторизация пользователя</h4>
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{
-              mobile: "",
-              code: "",
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit} className="p-fluid">
-                <Field
+          <form className="p-fluid">
+            <div className={style.field}>
+              <span className="p-float-label">
+                <Controller
                   name="mobile"
-                  render={({ input, meta }) => (
-                    <div className={style.field}>
-                      <span className="p-float-label">
-                        <InputMask
-                          id="mobile"
-                          {...input}
-                          mask="+9(999)-999-99-99"
-                          unmask={true}
-                          className={classNames({
-                            "p-invalid": isFormFieldValid(meta),
-                          })}
-                        />
-                        <label
-                          htmlFor="mobile"
-                          className={classNames({
-                            "p-error": isFormFieldValid(meta),
-                          })}
-                        >
-                          Номер телефона*
-                        </label>
-                      </span>
-                      {getFormErrorMessage(meta)}
-                    </div>
+                  control={control}
+                  rules={{ required: "Введите номер телефона" }}
+                  render={({ field, fieldState }) => (
+                    <InputMask
+                      id={field.name}
+                        {...field}
+                      mask='+7(999)-999-99-99'
+                      unmask={true}
+                      className={classNames({
+                        "p-invalid": fieldState.invalid,
+                      })}
+                    />
                   )}
                 />
-
-                <Field
-                  name="code"
-                  render={({ input, meta }) => (
-                    <div className={style.field}>
-                      <span className="p-float-label">
-                        <InputMask
-                          id="code"
-                          {...input}
-                          mask="9999"
-                          slotChar="____"
-                          className={classNames({
-                            "p-invalid": isFormFieldValid(meta),
-                          })}
-                        />
-                        <label
-                          htmlFor="code"
-                          className={classNames({
-                            "p-error": isFormFieldValid(meta),
-                          })}
-                        >
-                          Код*
-                        </label>
-                      </span>
-                      {getFormErrorMessage(meta)}
-                    </div>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  label="Вход"
-                  style={{ background: "#25476a", border: "none" }}
-                  className="mt-2"
-                />
-              </form>
+                <label
+                  htmlFor="mobile"
+                  className={classNames({ "p-error": !!errors.mobile })}
+                >
+                  Номер телефона
+                </label>
+              </span>
+              {getFormErrorMessage("mobile")}
+            </div>
+            {status === "OK" || status.message === 'Не совпадает код авторизации' && (
+              <div className={style.field}>
+                <span className="p-float-label">
+                  <Controller
+                    name="code"
+                    control={control}
+                    rules={{ required: "Введите код" }}
+                    render={({ field, fieldState }) => (
+                      <InputMask
+                        id={field.name}
+                        {...field}
+                        mask="9999"
+                        unmask={true}
+                        className={classNames({
+                          "p-invalid": fieldState.invalid,
+                        })}
+                      />
+                    )}
+                  />
+                  <label
+                    htmlFor="code"
+                    className={classNames({ "p-error": !!errors.code })}
+                  >
+                    Код
+                  </label>
+                </span>
+                {getFormErrorMessage("code")}
+              </div>
             )}
-          />
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              label="Вход"
+              style={{ background: "#25476a", border: "none" }}
+              className="mt-2"
+            />
+          </form>
         </div>
       </div>
     </div>
