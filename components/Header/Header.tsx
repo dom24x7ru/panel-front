@@ -7,7 +7,7 @@ import 'primeflex/primeflex.css';
 
 
 const Header = ({header, className, headerTemplate, ...props} : {
-    header: string,
+    header?: string,
     children?: React.ReactNode,
     className?: string,
     headerTemplate?: any
