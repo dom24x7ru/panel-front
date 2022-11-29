@@ -1,5 +1,6 @@
 import React from 'react';
 import { BreadCrumb } from 'primereact/breadcrumb';
+import style from './BreadCrumbs.module.scss';
 
 
 
@@ -9,8 +10,8 @@ const BreadCrumbs = ({...props}) => {
 
     return (
         <div>
-            <div className="card">
-                <BreadCrumb className={props.className} model={props.model} home={props.home} />
+            <div className={style.breadCrumbs}>
+                <BreadCrumb className={style.crumbs} model={props.model} home={props.home} />
             </div>
         </div>
     );

@@ -27,7 +27,7 @@ const Layout = ({ children }: { children: any }) => {
             icon="pi pi-bars"
             onClick={() => setVisibleLeft(true)}
             className="p-button-rounded p-button-secondary p-button-text"
-            style={{ color: "white", marginTop: "0.7em" }}
+            style={{ color: "white", marginTop: "0.4em" }}
           />
         </div>
         <Image
