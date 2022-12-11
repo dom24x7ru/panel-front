@@ -1,14 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import client from "../../storage";
+import ConfirmDialogDelete from "./components/ConfirmDialogDelete/ConfirmDialogDelete";
+import ConfirmDialogEdit from "./components/ConfirmDialogEdit/ConfirmDialogEdit";
 import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
-import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import style from './Houses.module.scss';
+import style from "./Houses.module.scss";
+
+
+
+type TConfirmDialogDeleteState = {
+  show: any;
+  houseId?: any;
+  onHide: () => void;
+};
+
+type TConfirmDialogEditState = {
+  show: any;
+  houseId?: any;
+  onHide: () => void;
+};
 
 const House = () => {
+  const [confirmDialogDelete, setConfirmDialogDelete] = useState<TConfirmDialogDeleteState | any >({ show: false });
+  const [confirmDialogEdit, setConfirmDialogEdit] = useState<TConfirmDialogEditState | any  >({ show: false });
   const [data, setData] = useState([]);
   const tableMenuContextRefs = useRef<any>([]);
 
@@ -24,16 +41,42 @@ const House = () => {
       });
   }, []);
 
+  console.log(data)
+
   const items = (rowData: any) => [
     {
-      label: 'Изменить',
+      label: "Изменить",
       icon: "pi pi-refresh",
+      command: () =>
+        onClickConfirmDialogDelete("confirmDialogEdit", {
+          houseId: rowData.id,
+        }),
     },
     {
-      label: 'Удалить',
+      label: "Удалить",
       icon: "pi pi-times",
+      command: () =>
+        onClickConfirmDialogDelete("confirmDialogDelete", {
+          houseId: rowData.id,
+        }),
     },
   ];
+
+  const onClickConfirmDialogDelete = (name: string, params?: any) => {
+    if (name === "confirmDialogDelete") {
+      setConfirmDialogDelete({ show: true, houseId: params?.houseId });
+    } else if (name === "confirmDialogEdit") {
+      setConfirmDialogEdit({ show: true, houseId: params?.houseId });
+    }
+  };
+
+  const onHide = (name: any) => {
+    if (name === "confirmDialogDelete") {
+      setConfirmDialogDelete({ show: false });
+    } else if (name === "confirmDialogEdit") {
+      setConfirmDialogEdit({ show: false });
+    }
+  };
 
   const rightToolbarTemplate = () => {
     return (
@@ -70,56 +113,77 @@ const House = () => {
     </React.Fragment>
   );
 
+  const geoBodyTemplate = (rowData: any) => {
+    if (rowData && rowData.lat && rowData.lon) {
+      return (
+        <div>
+          <div>Ш: {rowData.lat}</div>
+          <div>Д: {rowData.lon}</div>
+        </div>
+      );
+    }
+    return "-";
+  };
+
   return (
     <>
       <div className="card">
-        <Toolbar className={style.toolbar} right={rightToolbarTemplate}/>
+        <Toolbar className={style.toolbar} right={rightToolbarTemplate} />
         <DataTable
           value={data}
           dataKey="id"
           paginator
-          rows={15}
-          rowsPerPageOptions={[5, 10, 25]}
+          rows={10}
+          rowsPerPageOptions={[5, 15, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Показано {first} по {last} из {totalRecords} дома"
           responsiveLayout="scroll"
         >
-          <Column
-            field="id"
-            header="Id Дома"
-            sortable
-            style={{ minWidth: "12rem" }}
-          />
+          <Column field="id" header="Id Дома" />
           <Column
             field="address"
             header="Адрес"
             sortable
-            style={{ minWidth: "16rem" }}
+            style={{ maxWidth: "20rem" }}
           />
-          <Column field="image" header="Геоданные" />
+          <Column body={geoBodyTemplate} header="Геоданные" />
           <Column
             field="extra.flats"
             header="Кол-во квартир"
             sortable
-            style={{ minWidth: "8rem" }}
+            style={{ maxWidth: "9rem" }}
           />
           <Column
             field="residents"
             header="Кол-во зарегистрированных"
             sortable
-            style={{ minWidth: "10rem" }}
+            style={{ maxWidth: "9rem" }}
           />
           <Column
             body={actionBodyTemplate}
             exportable={false}
             style={{
-              maxWidth: "5rem",
+              maxWidth: "3rem",
               wordWrap: "break-word",
               wordBreak: "break-all",
             }}
           />
         </DataTable>
       </div>
+
+      {confirmDialogDelete.show && (
+        <ConfirmDialogDelete
+          houseId={confirmDialogDelete.houseId}
+          onHide={() => onHide("confirmDialogDelete")}
+        />
+      )}
+
+      {confirmDialogEdit.show && (
+        <ConfirmDialogEdit
+          houseId={confirmDialogEdit.houseId}
+          onHide={() => onHide("confirmDialogEdit")}
+        />
+      )}
     </>
   );
 };

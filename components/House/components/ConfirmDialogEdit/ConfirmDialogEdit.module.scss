@@ -1,0 +1,16 @@
+.adressSug {
+    padding: 8px
+}
+.header {
+    margin-left: 12px;       
+}
+
+.buttonsConfirm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .buttons {
+        margin: 8px;
+    }
+}

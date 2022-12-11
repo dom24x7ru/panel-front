@@ -1,23 +1,24 @@
 import React, { useState, useRef } from "react";
 import router from "next/router";
-import client from "../../storage";
+import client from "../../../storage";
 import { Controller, useForm } from "react-hook-form";
 import { InputMask } from "primereact/inputmask";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import Image from "next/image";
-import style from "./FormDemo.module.scss";
+import style from './ConfirmCode.module.scss';
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
 
-const LoginForm = () => {
+const ConfirmCode = () => {
   const [showMessage, setShowMessage] = useState(false);
   const toast = useRef<Toast>(null);
   const defaultValues = {
     mobile: "",
+    code: "",
   };
   const {
     control,
@@ -44,23 +45,26 @@ const LoginForm = () => {
     }
   };
 
-  const getCodeSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     let params = {
-      mobile: `7${data.mobile}`,
+      mobile: window.location.search.split('=')[1],
+      code: data.code
     };
     setShowMessage(true);
     client
       .wrapEmit("user.auth", params)
       .then((data) => {
-        data.status === 'OK'
-          ? router.push(`/auth/smsConfirm?mobile=${params.mobile}`)
+        console.log(data)
+        localStorage.setItem('role', data.role.id)
+        localStorage.setItem('userId', data.id);
+        data.id
+          ? router.push('/home/main')
           : showError("Ошибка", data.message);
       })
       .catch((err: any) => {
         console.log(err);
       });
   };
-
 
   return (
     <div className={style.formDemo}>
@@ -80,14 +84,14 @@ const LoginForm = () => {
             <div className={style.field}>
               <span className="p-float-label">
                 <Controller
-                  name="mobile"
+                  name="code"
                   control={control}
-                  rules={{ required: "Введите номер телефона" }}
+                  rules={{ required: "Введите код" }}
                   render={({ field, fieldState }) => (
                     <InputMask
                       id={field.name}
                       {...field}
-                      mask="+7(999)-999-99-99"
+                      mask="9999"
                       unmask={true}
                       className={classNames({
                         "p-invalid": fieldState.invalid,
@@ -96,17 +100,17 @@ const LoginForm = () => {
                   )}
                 />
                 <label
-                  htmlFor="mobile"
-                  className={classNames({ "p-error": !!errors.mobile })}
+                  htmlFor="code"
+                  className={classNames({ "p-error": !!errors.code })}
                 >
-                  Номер телефона
+                  Код
                 </label>
               </span>
-              {getFormErrorMessage("mobile")}
+              {getFormErrorMessage("code")}
             </div>
             <Button
-              onClick={handleSubmit(getCodeSubmit)}
-              label="Получить код"
+              onClick={handleSubmit(onSubmit)}
+              label="Войти"
               style={{ background: "#25476a", border: "none" }}
               className="mt-2"
             />
@@ -117,4 +121,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default ConfirmCode;

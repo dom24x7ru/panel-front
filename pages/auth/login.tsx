@@ -1,9 +1,8 @@
 import type { NextPage } from 'next';
 import LoginForm from '../../components/LoginForm/LoginForm';
-import style from './login.module.scss';
 
 const Login: NextPage = () => (
-  <div className={style.login}>
+  <div>
     <LoginForm />
   </div>
 );

@@ -1,12 +1,16 @@
 import React, { useRef, useState } from "react";
+import router from "next/router";
+import LeftBar from "../LeftBar/LeftBar";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { OverlayPanel } from "primereact/overlaypanel";
 import BreadCrumbs from "./BreadCrumbs/BreadCrumbs";
 import Image from "next/image";
 import style from "./Layout.module.scss";
-import { Accordion, AccordionTab } from "primereact/accordion";
-import { Avatar } from "primereact/avatar";
-import LeftBar from "../LeftBar/LeftBar";
+import client from "../../storage";
+
+
 
 const Layout = ({ children }: { children: any }) => {
   const [visibleLeft, setVisibleLeft] = useState(false);
@@ -16,8 +20,17 @@ const Layout = ({ children }: { children: any }) => {
   const items = [
     {label: 'Главная', url: '/home/main'},
     {label: 'Дома', url: '/houses/homes'},
-    {label: 'Пользователи'},
+    {label: 'Пользователи', url: '/users/usersRegistry'},
 ];
+
+const logout = () => {
+  client.wrapEmit('user.logout').then((data) => {
+    console.log(data)
+    router.push('/auth/login')
+  }).catch((error) => {
+    console.log(error);
+  })
+}
 
   return (
     <div>
@@ -65,6 +78,7 @@ const Layout = ({ children }: { children: any }) => {
               className="p-button-secondary p-button-text"
             />
             <Button
+              onClick={logout}
               label="Выход"
               className="p-button-secondary p-button-text"
             />
