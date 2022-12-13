@@ -10,27 +10,28 @@ import Image from "next/image";
 import style from "./Layout.module.scss";
 import client from "../../storage";
 
-
-
 const Layout = ({ children }: { children: any }) => {
   const [visibleLeft, setVisibleLeft] = useState(false);
   const overlayNotification = useRef<OverlayPanel>(null);
   const overlayUser = useRef<OverlayPanel>(null);
 
   const items = [
-    {label: 'Главная', url: '/home/main'},
-    {label: 'Дома', url: '/houses/homes'},
-    {label: 'Пользователи', url: '/users/usersRegistry'},
-];
+    { label: "Главная", url: "/home/main" },
+    { label: "Дома", url: "/houses/homes" },
+    { label: "Пользователи", url: "/users/usersRegistry" },
+  ];
 
-const logout = () => {
-  client.wrapEmit('user.logout').then((data) => {
-    console.log(data)
-    router.push('/auth/login')
-  }).catch((error) => {
-    console.log(error);
-  })
-}
+  const logout = () => {
+    client
+      .wrapEmit("user.logout")
+      .then((data) => {
+        console.log(data);
+        router.push("/auth/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div>
@@ -53,7 +54,7 @@ const logout = () => {
         <h3>DOM 24x7</h3>
         <div className={style.end}>
           <div className={style.breadCrumbs}>
-             <BreadCrumbs model={items} />
+            <BreadCrumbs model={items} />
           </div>
           <Button
             type="button"
@@ -103,7 +104,7 @@ const logout = () => {
               <Accordion activeIndex={1}>
                 <AccordionTab
                   tabIndex={1}
-                  className="accordionUserEdit"
+                  className={style.accordionCostom}
                   header={
                     <React.Fragment>
                       <i className="pi pi-user-edit"></i>
@@ -117,6 +118,7 @@ const logout = () => {
             </div>
             <Accordion style={{ marginTop: "38px" }} activeIndex={0}>
               <AccordionTab
+                className={style.accordionCostom}
                 tabIndex={1}
                 header={
                   <React.Fragment>
@@ -125,20 +127,15 @@ const logout = () => {
                   </React.Fragment>
                 }
               >
-                <p>Дома</p>
+                <Button
+                  onClick={() => router.push('/houses/homes')}
+                  style={{ color: "#495057" }}
+                  label="Перейти в раздел Дома"
+                  className="p-button-link"
+                />
               </AccordionTab>
               <AccordionTab
-                tabIndex={2}
-                header={
-                  <React.Fragment>
-                    <i className="pi pi-wrench"></i>
-                    <span>Настройки</span>
-                  </React.Fragment>
-                }
-              >
-                <p>Настройки</p>
-              </AccordionTab>
-              <AccordionTab
+                className={style.accordionCostom}
                 tabIndex={3}
                 header={
                   <React.Fragment>
@@ -147,10 +144,28 @@ const logout = () => {
                   </React.Fragment>
                 }
               >
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do
-                </p>
+                <Button
+                onClick={() => router.push('/users/usersRegistry')}
+                  style={{ color: "#495057" }}
+                  label="Перейти в раздел Пользователи"
+                  className="p-button-link"
+                />
+              </AccordionTab>
+              <AccordionTab
+                tabIndex={2}
+                className={style.accordionCostom}
+                header={
+                  <React.Fragment>
+                    <i className="pi pi-wrench"></i>
+                    <span>Настройки</span>
+                  </React.Fragment>
+                }
+              >
+                <Button
+                  style={{ color: "#495057" }}
+                  label="Перейти в раздел Настройки"
+                  className="p-button-link"
+                />
               </AccordionTab>
             </Accordion>
           </LeftBar>
