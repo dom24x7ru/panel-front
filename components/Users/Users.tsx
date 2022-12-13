@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import client from "../../storage";
+import router from "next/router";
 import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
 import { Column } from "primereact/column";
 import style from "./Users.module.scss";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 
 const Users = () => {
   const [data, setData] = useState([]);
+  const toast = useRef<Toast>(null);
   const tableMenuContextRefs = useRef<any>([]);
 
   useEffect(() => {
@@ -28,12 +31,55 @@ const Users = () => {
     {
       label: "Изменить",
       icon: "pi pi-refresh",
+      command: () => {
+        router.push(`/users/${rowData.id}`);
+      },
+    },
+    {
+      label: "Заблокировать",
+      icon: "pi pi-ban",
+      command: () => blockUser(rowData.id)
     },
     {
       label: "Удалить",
       icon: "pi pi-times",
+      command: () => deleteUser(rowData.id)
     },
   ];
+
+  const showMessage = (summary: string, detail: any) => {
+    if (toast != null && toast.current != null) {
+      toast.current.show({
+        severity: 'info',
+        summary: summary,
+        detail: detail,
+        life: 10000,
+      });
+    }
+  };
+
+  const blockUser = (id: any) => {
+    client
+      .wrapEmit("panel/user.block", {id})
+      .then((response) => {
+        showMessage('Информация', response.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const deleteUser = (id: any) => {
+    client
+      .wrapEmit("panel/user.del", {id})
+      .then((response) => {
+        showMessage('Информация', response.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
 
   const actionBodyTemplate = (rowData: any) => (
     <React.Fragment>
@@ -59,10 +105,14 @@ const Users = () => {
   );
 
   const actionBodyFullName = (rowData: any) =>
-    (rowData.person !== null && (rowData.person.name && rowData.person.midname && rowData.person.surname) !=
-      undefined ||
-      rowData.person !== null && (rowData.person.name || rowData.person.midname || rowData.person.surname) !=
-      null)
+    (rowData.person !== null &&
+      (rowData.person.name &&
+        rowData.person.midname &&
+        rowData.person.surname) != undefined) ||
+    (rowData.person !== null &&
+      (rowData.person.name ||
+        rowData.person.midname ||
+        rowData.person.surname) != null)
       ? `${rowData.person.name} ${rowData.person.midname} ${rowData.person.surname}`
       : "-";
   const actionBodyAdress = (rowData: any) =>
@@ -73,14 +123,16 @@ const Users = () => {
   return (
     <>
       <div className="card">
+        <Toast ref={toast} />
         <DataTable
+          size="small"
           value={data}
           dataKey="id"
           paginator
           rows={10}
           rowsPerPageOptions={[5, 15, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Показано {first} по {last} из {totalRecords} дома"
+          currentPageReportTemplate="Показано {first} по {last} из {totalRecords} жильцов"
           responsiveLayout="scroll"
         >
           <Column field="id" header="Id Пользователя" />
