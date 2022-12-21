@@ -8,6 +8,7 @@ import { Toolbar } from "primereact/toolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import style from "./Houses.module.scss";
+import router from "next/router";
 
 
 
@@ -44,6 +45,11 @@ const House = () => {
   console.log(data)
 
   const items = (rowData: any) => [
+    {
+      label: "Список квартир",
+      icon: "pi pi-home",
+      command: () => router.push(`/flats/flatsRegistry?houseId=${rowData.id}`)
+    },
     {
       label: "Изменить",
       icon: "pi pi-refresh",
@@ -132,6 +138,7 @@ const House = () => {
         <DataTable
           value={data}
           dataKey="id"
+          size="small"
           paginator
           rows={10}
           rowsPerPageOptions={[5, 15, 25]}

@@ -1,14 +1,50 @@
-import { ConfirmDialog } from 'primereact/confirmdialog';
+import client from '../../../../storage/index';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import style from './ConfirmDialogDelete.module.scss';
+
 
 const ConfirmDialogDelete = ({onHide, houseId}: {
     onHide: any;
     houseId: number;
 }) => {
+    const deleteHouse = (houseId: any) => {
+        client.wrapEmit('panel/house.delete', {houseId}).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    
     return (
-        <div>
-        <ConfirmDialog visible={true} onHide={onHide} message="Вы уверены, что хотите удалить информацию по этому дому?"
-        header="Предупреждение" icon="pi pi-exclamation-triangle"  />
-    </div>
+        <>
+      <Dialog
+        header="Вы действительно хотите удалить информацию?"
+        onHide={onHide}
+        visible={true}
+        className={style.dialog}
+      >
+        <div className={style.buttonsConfirm}>
+          <div className={style.buttons}>
+            <Button
+              label="Удалить"
+              icon="pi pi-check"
+              style={{ width: 164 }}
+              className="p-button-danger"
+              onClick={deleteHouse}
+            />
+          </div>
+          <div className={style.buttons}>
+            <Button
+              label="Отмена"
+              icon="pi pi-times"
+              className="p-button-secondary"
+              onClick={onHide}
+            />
+          </div>
+        </div>
+      </Dialog>
+    </>
     );
 };
 

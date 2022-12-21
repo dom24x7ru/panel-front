@@ -91,6 +91,7 @@ const Layout = ({ children }: { children: any }) => {
         <div className={style.div1}>
           <LeftBar
             className={style.leftBar}
+            modal={false}
             visible={visibleLeft}
             onHide={() => setVisibleLeft(false)}
           >

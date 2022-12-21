@@ -2,19 +2,30 @@ import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { AddressSuggestions } from "react-dadata";
 import { Button } from "primereact/button";
-import style from "./ConfirmDialogEdit.module.scss";
-import "react-dadata/dist/react-dadata.css";
 import { Col, Row } from "react-bootstrap";
+import style from "./ConfirmDialogEdit.module.scss";
+import client from '../../../../storage/index';
+import "react-dadata/dist/react-dadata.css";
+
 
 const ConfirmDialogEdit = ({
   onHide,
   houseId,
-}: {
+}:{
   onHide: any;
   houseId: number;
 }) => {
-  const [form, setForm] = useState<any>([]);
+  const [form, setForm] = useState<any>();
 
+  const acceptEditAddress = ({houseId, address} : {houseId: any, address: any}) => {
+    client.wrapEmit("panel/house.save", {houseId, address: form}).then((response) => {
+      console.log(response)
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  console.log(form)
   return (
     <>
       <Dialog
@@ -29,12 +40,7 @@ const ConfirmDialogEdit = ({
             <AddressSuggestions
               token="cea9e9da956d849683f0e6f636fa32fe232bded7"
               value={form}
-              onChange={(evt: any) => {
-                setForm({
-                  ...form,
-                  address: evt.target.value,
-                });
-              }}
+              onChange={setForm}
             />
           </Col>
         </Row>
@@ -46,6 +52,7 @@ const ConfirmDialogEdit = ({
               icon="pi pi-check"
               style={{ width: 164 }}
               className="p-button-danger"
+              onClick={acceptEditAddress}
             />
           </div>
           <div className={style.buttons}>

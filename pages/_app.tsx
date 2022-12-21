@@ -1,11 +1,15 @@
 import type { AppProps } from "next/app";
-import Layout from "../components/Layout/Layout";
-import axios from "axios";
-import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import EmptyLayout from "../components/Layout/EmptyLayout";
+import Layout from "../components/Layout/Layout";
+import axios from "axios";
+
+import "../styles/globals.css";
+import "primeicons/primeicons.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.css";
 
 // axios.interceptors.request.use((config) => {
 //   if (localStorage.getItem("authToken")) {
