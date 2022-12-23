@@ -42,8 +42,6 @@ const House = () => {
       });
   }, []);
 
-  console.log(data)
-
   const items = (rowData: any) => [
     {
       label: "Список квартир",

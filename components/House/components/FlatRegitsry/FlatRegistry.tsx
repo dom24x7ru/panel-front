@@ -33,8 +33,6 @@ const FlatRegistry = () => {
       });
   }, []);
 
-  console.log(data);
-
   const actionBodyTemplate = (rowData: any) => (
     <React.Fragment>
       <Menu

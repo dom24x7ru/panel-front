@@ -17,7 +17,7 @@ const ConfirmDialogEdit = ({
 }) => {
   const [form, setForm] = useState<any>();
 
-  const acceptEditAddress = ({houseId, address} : {houseId: any, address: any}) => {
+  const acceptEditAddress = () => {
     client.wrapEmit("panel/house.save", {houseId, address: form}).then((response) => {
       console.log(response)
     }).catch((error) => {
@@ -25,7 +25,6 @@ const ConfirmDialogEdit = ({
     });
   }
 
-  console.log(form)
   return (
     <>
       <Dialog

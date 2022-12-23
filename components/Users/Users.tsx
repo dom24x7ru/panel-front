@@ -1,14 +1,33 @@
 import React, { useState, useEffect, useRef } from "react";
 import client from "../../storage";
 import router from "next/router";
+import ConfirmDialogDeleteUser from "./components/ConfirmDialogDeleteUser/ConfirmDialogDeleteUser";
+import ConfirmDialogBlockerUser from "./components/ConfirmDialogBlockerUser/ConfirmDialogBlockerUser";
 import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
 import { Column } from "primereact/column";
-import style from "./Users.module.scss";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
+import style from "./Users.module.scss";
+
+
+type TConfirmDialogDeleteUserState = {
+  show: any;
+  houseId?: number;
+  onHide: () => void;
+  showMessage: () => void;
+};
+
+type TConfirmDialogBlockerUserState = {
+  show: any;
+  houseId?: number;
+  onHide: () => void;
+  showMessage: () => void;
+};
 
 const Users = () => {
+  const [confirmDialogDeleteUser, setConfirmDialogDeleteUser] = useState<TConfirmDialogDeleteUserState | any >({ show: false });
+  const [confirmDialogBlockerUser, setConfirmDialogBlockerUser] = useState<TConfirmDialogBlockerUserState | any >({ show: false });
   const [data, setData] = useState([]);
   const toast = useRef<Toast>(null);
   const tableMenuContextRefs = useRef<any>([]);
@@ -25,8 +44,6 @@ const Users = () => {
       });
   }, []);
 
-  console.log(data);
-
   const items = (rowData: any) => [
     {
       label: "Изменить",
@@ -38,48 +55,40 @@ const Users = () => {
     {
       label: "Заблокировать",
       icon: "pi pi-ban",
-      command: () => blockUser(rowData.id)
+      command: () =>
+      onClickConfirmDialog("confirmDialogBlockerUser", {
+          userId: rowData.id,
+        }),
     },
     {
       label: "Удалить",
       icon: "pi pi-times",
-      command: () => deleteUser(rowData.id)
+      command: () =>
+      onClickConfirmDialog("confirmDialogDeleteUser", {
+          userId: rowData.id,
+        }),
     },
   ];
 
-  const showMessage = (summary: string, detail: any) => {
-    if (toast != null && toast.current != null) {
-      toast.current.show({
-        severity: 'info',
-        summary: summary,
-        detail: detail,
-        life: 10000,
-      });
+  const showMessage = (severity: any, summary: any, detail: any) => {
+    toast.current.show({severity: severity, summary: summary, detail: detail, life: 2000});
+}
+
+  const onClickConfirmDialog = (name: string, params?: any) => {
+    if (name === "confirmDialogDeleteUser") {
+      setConfirmDialogDeleteUser({ show: true, userId: params?.userId });
+    } else if (name === "confirmDialogBlockerUser") {
+      setConfirmDialogBlockerUser({ show: true, userId: params?.userId })
     }
   };
 
-  const blockUser = (id: any) => {
-    client
-      .wrapEmit("panel/user.block", {id})
-      .then((response) => {
-        showMessage('Информация', response.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const onHide = (name: any) => {
+    if (name === "confirmDialogDeleteUser") {
+      setConfirmDialogDeleteUser({ show: false });
+    } else if (name === "confirmDialogBlockerUser") {
+      setConfirmDialogBlockerUser({show: false});
+    }
   };
-
-  const deleteUser = (id: any) => {
-    client
-      .wrapEmit("panel/user.del", {id})
-      .then((response) => {
-        showMessage('Информация', response.message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
 
   const actionBodyTemplate = (rowData: any) => (
     <React.Fragment>
@@ -103,6 +112,13 @@ const Users = () => {
       />
     </React.Fragment>
   );
+
+  const stockBodyTemplate = (data: { deleted: boolean; }) => ({
+    'row-accessories': data.deleted && data.deleted === true,
+  });
+
+
+  console.log(data)
 
   const actionBodyFullName = (rowData: any) =>
     (rowData.person !== null &&
@@ -128,6 +144,7 @@ const Users = () => {
           size="small"
           value={data}
           dataKey="id"
+          rowClassName={stockBodyTemplate}
           paginator
           rows={10}
           rowsPerPageOptions={[5, 15, 25]}
@@ -146,13 +163,11 @@ const Users = () => {
           <Column
             field="extra.flats"
             header="Номер квартиры"
-            sortable
             style={{ maxWidth: "9rem" }}
           />
           <Column
             field="mobile"
             header="Мобильный"
-            sortable
             style={{ maxWidth: "9rem" }}
           />
           <Column
@@ -166,6 +181,21 @@ const Users = () => {
           />
         </DataTable>
       </div>
+      {confirmDialogDeleteUser.show && (
+        <ConfirmDialogDeleteUser
+          userId={confirmDialogDeleteUser.userId}
+          onHide={() => onHide("confirmDialogDeleteUser")}
+          showMessage={showMessage}
+        />
+      )}
+
+      {confirmDialogBlockerUser.show && (
+        <ConfirmDialogBlockerUser
+          userId={confirmDialogBlockerUser.userId}
+          onHide={() => onHide("confirmDialogBlockerUser")}
+          showMessage={showMessage}
+        />
+      )}
     </>
   );
 };

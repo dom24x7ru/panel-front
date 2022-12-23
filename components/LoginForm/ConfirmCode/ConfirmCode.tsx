@@ -8,10 +8,7 @@ import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import Image from "next/image";
 import style from './ConfirmCode.module.scss';
-import "primeicons/primeicons.css";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.css";
-import "primeflex/primeflex.css";
+
 
 const ConfirmCode = () => {
   const [showMessage, setShowMessage] = useState(false);
@@ -54,7 +51,6 @@ const ConfirmCode = () => {
     client
       .wrapEmit("user.auth", params)
       .then((data) => {
-        console.log(data)
         localStorage.setItem('role', data.role.id)
         localStorage.setItem('userId', data.id);
         data.id
@@ -68,8 +64,7 @@ const ConfirmCode = () => {
 
   return (
     <div className={style.formDemo}>
-      <Toast ref={toast}></Toast>
-      <div className="flex justify-content-center">
+      <Toast ref={toast} />
         <div className={style.card}>
           <Image
             className={style.logo}
@@ -111,12 +106,11 @@ const ConfirmCode = () => {
             <Button
               onClick={handleSubmit(onSubmit)}
               label="Войти"
-              style={{ background: "#25476a", border: "none" }}
+              style={{ background: "#25476a", border: "none", marginTop: '20px' }}
               className="mt-2"
             />
           </form>
         </div>
-      </div>
     </div>
   );
 };

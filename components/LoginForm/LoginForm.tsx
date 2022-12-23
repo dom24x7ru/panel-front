@@ -61,8 +61,7 @@ const LoginForm = () => {
 
   return (
     <div className={style.formDemo}>
-      <Toast ref={toast}></Toast>
-      <div className="flex justify-content-center">
+      <Toast ref={toast} />
         <div className={style.card}>
           <Image
             className={style.logo}
@@ -104,12 +103,11 @@ const LoginForm = () => {
             <Button
               onClick={handleSubmit(getCodeSubmit)}
               label="Получить код"
-              style={{ background: "#25476a", border: "none" }}
+              style={{ background: "#25476a", border: "none", marginTop: '20px' }}
               className="mt-2"
             />
           </form>
         </div>
-      </div>
     </div>
   );
 };
