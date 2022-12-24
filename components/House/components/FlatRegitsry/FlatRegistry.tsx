@@ -13,7 +13,7 @@ const FlatRegistry = () => {
   const items = (rowData: any) => [
     {
       label: "Изменить",
-      icon: "pi pi-refresh",
+      icon: "pi pi-file-edit",
     },
     {
       label: "Удалить",

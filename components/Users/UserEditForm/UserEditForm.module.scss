@@ -5,9 +5,22 @@
         color: #495057;
     }
     .inputDiv {
+        display: flex;
+        flex-direction: column;
         padding: 8px;
         .input {
             width: 32rem;
         }
+    }
+}
+
+.buttonsConfirm {
+    width: 32rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .buttons {
+        margin: 12px;
     }
 }

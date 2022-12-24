@@ -47,7 +47,7 @@ const Users = () => {
   const items = (rowData: any) => [
     {
       label: "Изменить",
-      icon: "pi pi-refresh",
+      icon: "pi pi-file-edit",
       command: () => {
         router.push(`/users/${rowData.id}`);
       },

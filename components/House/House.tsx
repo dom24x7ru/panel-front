@@ -45,12 +45,12 @@ const House = () => {
   const items = (rowData: any) => [
     {
       label: "Список квартир",
-      icon: "pi pi-home",
+      icon: "pi pi-building",
       command: () => router.push(`/flats/flatsRegistry?houseId=${rowData.id}`)
     },
     {
       label: "Изменить",
-      icon: "pi pi-refresh",
+      icon: "pi pi-file-edit",
       command: () =>
         onClickConfirmDialogDelete("confirmDialogEdit", {
           houseId: rowData.id,
