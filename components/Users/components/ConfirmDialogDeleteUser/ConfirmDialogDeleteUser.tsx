@@ -13,8 +13,9 @@ const ConfirmDialogDeleteUser = ({
   showMessage: (severity: any, summary: any, detail: any) => void;
 }) => {
   const deleteUser = () => {
+    let params = {id: userId}
     client
-      .wrapEmit("panel/user.del", {userId})
+      .wrapEmit("panel/user.del", params)
       .then((response) => {
         showMessage('success', 'Пользователь удален',  response.message);
       })

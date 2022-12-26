@@ -8,19 +8,20 @@ import { Menu } from "primereact/menu";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
+import { Tooltip } from 'primereact/tooltip';
 import style from "./Users.module.scss";
 
 
 type TConfirmDialogDeleteUserState = {
   show: any;
-  houseId?: number;
+  userId?: number;
   onHide: () => void;
   showMessage: () => void;
 };
 
 type TConfirmDialogBlockerUserState = {
   show: any;
-  houseId?: number;
+  userId?: number;
   onHide: () => void;
   showMessage: () => void;
 };
@@ -113,9 +114,47 @@ const Users = () => {
     </React.Fragment>
   );
 
-  const stockBodyTemplate = (data: { deleted: boolean; }) => ({
-    'row-accessories': data.deleted && data.deleted === true,
+  const stockBodyTemplate = (data: {
+    banned: boolean; deleted: boolean; 
+}) => ({
+    'row-accessories': data.deleted && data.deleted === true || data.banned && data.banned === true,
   });
+
+  const stockBodyOperationsTemplate = (rowData: any) => { 
+    if (rowData.deleted && rowData.deleted === true) {
+      return(
+        <div className='statusOperDraft'>
+          <Tooltip target='.pi-user' />
+          <i
+            className='pi pi-user'
+            data-pr-tooltip={'Пользователь удален'}
+            data-pr-position='right'
+            data-pr-at='right+5 top'
+            data-pr-my='left center-2'
+            style={{ fontSize: '1.5rem', cursor: 'pointer', color: '#737c8c' }}>
+            <i className='pi pi-exclamation-circle' style={{ color: '#910134' }}></i>
+          </i>
+        </div>
+      );
+    } else if (rowData.banned && rowData.banned === true) {
+      return (
+        <div className='statusOperDraft'>
+          <Tooltip target='.pi-user' />
+          <i
+            className='pi pi-user'
+            data-pr-tooltip={'Пользователь заблокирован'}
+            data-pr-position='right'
+            data-pr-at='right+5 top'
+            data-pr-my='left center-2'
+            style={{ fontSize: '1.5rem', cursor: 'pointer', color: '#737c8c' }}>
+            <i className='pi pi-ban' style={{ color: '#910134' }}></i>
+          </i>
+        </div>
+      );
+    } else {
+      return (rowData.id);
+    }
+  };
 
 
   console.log(data)
@@ -152,7 +191,7 @@ const Users = () => {
           currentPageReportTemplate="Показано {first} по {last} из {totalRecords} жильцов"
           responsiveLayout="scroll"
         >
-          <Column field="id" header="Id Пользователя" />
+          <Column body={stockBodyOperationsTemplate} header="Id Пользователя" />
           <Column body={actionBodyFullName} sortable header="ФИО" />
           <Column
             body={actionBodyAdress}

@@ -8,12 +8,13 @@ const ConfirmDialogDelete = ({onHide, houseId}: {
     onHide: any;
     houseId: number;
 }) => {
-    const deleteHouse = (houseId: any) => {
+    const deleteHouse = () => {
         client.wrapEmit('panel/house.delete', {houseId}).then((response) => {
             console.log(response)
         }).catch((error) => {
             console.log(error);
         });
+        onHide();
     }
     
     return (

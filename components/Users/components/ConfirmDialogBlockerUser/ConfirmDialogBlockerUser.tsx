@@ -13,8 +13,10 @@ const ConfirmDialogBlockerUser = ({
   showMessage: (severity: any, summary: any, detail: any) => void;
 }) => {
   const blockUser = () => {
+    let params = {id: userId}
+    console.log(userId)
     client
-      .wrapEmit("panel/user.block", { userId })
+      .wrapEmit("panel/user.block", params)
       .then((response) => {
         showMessage(
           "success",
@@ -27,6 +29,8 @@ const ConfirmDialogBlockerUser = ({
       });
       onHide();
   };
+
+  
 
   return (
     <>

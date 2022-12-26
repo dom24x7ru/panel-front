@@ -23,6 +23,7 @@ const ConfirmDialogEdit = ({
     }).catch((error) => {
       console.log(error);
     });
+    onHide();
   }
 
   return (
