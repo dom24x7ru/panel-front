@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import router from "next/router";
 import LeftBar from "../LeftBar/LeftBar";
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -14,13 +14,7 @@ const Layout = ({ children }: { children: any }) => {
   const [visibleLeft, setVisibleLeft] = useState(false);
   const overlayNotification = useRef<OverlayPanel>(null);
   const overlayUser = useRef<OverlayPanel>(null);
-
-  const items = [
-    { label: "Главная", url: "/home/main" },
-    { label: "Дома", url: "/houses/homes" },
-    { label: "Пользователи", url: "/users/usersRegistry" },
-  ];
-
+  
   const logout = () => {
     client
       .wrapEmit("user.logout")
@@ -54,7 +48,7 @@ const Layout = ({ children }: { children: any }) => {
         <h3>DOM 24x7</h3>
         <div className={style.end}>
           <div className={style.breadCrumbs}>
-            <BreadCrumbs model={items} />
+            <BreadCrumbs />
           </div>
           <Button
             type="button"
@@ -129,7 +123,7 @@ const Layout = ({ children }: { children: any }) => {
                 }
               >
                 <Button
-                  onClick={() => router.push('/houses/homes')}
+                  onClick={() => router.push("/houses/homes")}
                   style={{ color: "#495057" }}
                   label="Перейти в раздел Дома"
                   className="p-button-link"
@@ -146,7 +140,7 @@ const Layout = ({ children }: { children: any }) => {
                 }
               >
                 <Button
-                onClick={() => router.push('/users/usersRegistry')}
+                  onClick={() => router.push("/users/usersRegistry")}
                   style={{ color: "#495057" }}
                   label="Перейти в раздел Пользователи"
                   className="p-button-link"

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
-import { Toolbar } from "primereact/toolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import client from "../../../../storage";
+import router from "next/router";
 
 const FlatRegistry = () => {
   const [data, setData] = useState([]);
@@ -22,7 +22,7 @@ const FlatRegistry = () => {
   ];
 
   useEffect(() => {
-    let params = { houseId: window.location.search.split("=")[1] };
+    let params = { houseId: router.query.id };
     client
       .wrapEmit("panel/flat.list", params)
       .then((data) => {

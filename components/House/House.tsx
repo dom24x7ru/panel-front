@@ -46,7 +46,7 @@ const House = () => {
     {
       label: "Список квартир",
       icon: "pi pi-building",
-      command: () => router.push(`/flats/flatsRegistry?houseId=${rowData.id}`)
+      command: () => router.push(`/flats/${rowData.id}`)
     },
     {
       label: "Изменить",
